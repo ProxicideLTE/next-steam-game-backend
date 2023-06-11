@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-
+const fetch = require('cross-fetch');
 require('dotenv').config()
+
 
 router
   .get('/games', (req, res) => {
