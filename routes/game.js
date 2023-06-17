@@ -6,24 +6,26 @@
  */
 const express = require('express')
 const router = express.Router()
-const fetch = require('cross-fetch')
-const CompleteGame = require('../models/CompleteGame')
+const axios = require('axios')
+const CompletedGame = require('../models/CompleteGame')
 
 require('dotenv').config()
+
+const STEAM_API = 'http://store.steampowered.com/api/appdetails'
 
 router
   .get('/', async (req, res) => {
     res.send('No game app ID provided...')
   })
-  .get('/:appID', async (req, res) => {
-    const response = await fetch(
-      `http://store.steampowered.com/api/appdetails?appids=${req.params.appID}&json=1`
-    )
-    const data = await response.json()
-    res.status(200).send(JSON.stringify(data))
+  .get('/:appID', (req, res) => {
+    axios
+      .get(`${STEAM_API}?appids=${req.params.appID}&json=1`)
+      .then((response) => {
+        res.status(200).json(response.data)
+      })
   })
   .post('/', async (req, res) => {
-    const game = new CompleteGame({
+    const game = new CompletedGame({
       userID: req.body.userID,
       gameAppID: req.body.gameAppID,
     })

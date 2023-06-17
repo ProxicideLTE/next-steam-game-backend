@@ -12,8 +12,8 @@ const User = require('./../models/User')
 require('dotenv').config()
 
 const steam = new SteamAuth({
-  realm: 'http://localhost:3001',
-  returnUrl: 'http://localhost:3001/auth/steam/authenticate?',
+  realm: process.env.HOST_BACKEND,
+  returnUrl: `${process.env.HOST_BACKEND}/auth/steam/authenticate?`,
   apiKey: process.env.STEAM_API_KEY,
 })
 

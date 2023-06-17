@@ -6,14 +6,23 @@
  */
 const express = require('express')
 const router = express.Router()
-const fetch = require('cross-fetch')
+const axios = require('axios')
 
 const User = require('../models/User')
 const CreateUser = require('../lib/user.create')
-const DoesUserExist = require('../lib/user.existing')
 const UpdateUser = require('../lib/user.update')
 
 require('dotenv').config()
+
+const STEAM_API = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/'
+
+const getSteamAPIHostURL = (userID) => {
+  let steamURL = `${STEAM_API}?key=${process.env.STEAM_API_KEY}`
+  steamURL += `&include_appinfo=true&steamid=${userID}`
+  steamURL += `&include_played_free_games=true&format=json`
+
+  return steamURL
+}
 
 router
   .post('/', async (req, res) => {
@@ -56,16 +65,10 @@ router
     }
   })
 
-  .get('/games/:userid', (req, res) => {
-    fetch(
-      `${process.env.STEAM_HOST_URL}/IPlayerService/GetOwnedGames/v1/?key=${process.env.STEAM_API_KEY}&include_appinfo=true&steamid=${req.params.userid}&include_played_free_games=true&format=json`
-    )
-      .then((response) => {
-        return response.json()
-      })
-      .then((response) => {
-        res.json(response.response)
-      })
+  .get('/games/:userID', (req, res) => {
+    axios.get(getSteamAPIHostURL(req.params.userID)).then((response) => {
+      res.status(200).json(response.data)
+    })
   })
 
 module.exports = router
