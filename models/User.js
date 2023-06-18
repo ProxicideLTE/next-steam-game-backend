@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 
 const USER_SCHEMA = new mongoose.Schema({
   id: {
-    type: Number,
+    type: String,
     required: true,
   },
   email: {
@@ -19,7 +19,7 @@ const USER_SCHEMA = new mongoose.Schema({
     type: String,
   },
   steam_id: {
-    type: Number,
+    type: String,
   },
   date: {
     type: Date,

@@ -8,11 +8,11 @@ const mongoose = require('mongoose')
 
 const COMPLETE_GAME_SCHEMA = new mongoose.Schema({
   userID: {
-    type: Number,
+    type: String,
     require: true,
   },
   gameAppID: {
-    type: Number,
+    type: String,
     require: true,
   },
   date: {

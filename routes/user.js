@@ -9,8 +9,7 @@ const router = express.Router()
 const axios = require('axios')
 
 const User = require('../models/User')
-const CreateUser = require('../lib/user.create')
-const UpdateUser = require('../lib/user.update')
+const UserUtils = require('../util/util.user')
 
 require('dotenv').config()
 
@@ -27,7 +26,7 @@ const getSteamAPIHostURL = (userID) => {
 router
   .post('/', async (req, res) => {
     try {
-      const response = await CreateUser({
+      const response = await UserUtils.createUser({
         id: req.body.id,
         email: req.body.email,
       })
@@ -52,7 +51,7 @@ router
   })
   .patch('/:userID', async (req, res) => {
     try {
-      const response = await UpdateUser.insertUserSteamData(req.params.userID, {
+      const response = await UserUtils.insertUserSteamData(req.params.userID, {
         name: req.body.name,
         steam_id: req.body.steam_id,
       })
