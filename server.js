@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
@@ -10,6 +11,13 @@ app.use(express.json())
 app.use(
   cors({
     allow: '*',
+  })
+)
+app.use(
+  session({
+    secret: 'key',
+    resave: false,
+    saveUninitialized: false,
   })
 )
 
@@ -30,6 +38,9 @@ app.use('/user', userRouter)
 
 const gameRouter = require('./routes/game')
 app.use('/game', gameRouter)
+
+const logoutRouter = require('./routes/logout')
+app.use('/logout', logoutRouter)
 
 app.listen(PORT, () => {
   console.log(`Service running on port ${PORT}`)

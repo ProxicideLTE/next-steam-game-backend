@@ -1,7 +1,7 @@
 /**
  * @file user.js
  *
- * Handles all the API routes for the user.
+ * Handles all the API routes for the user account.
  *
  */
 const express = require('express')
