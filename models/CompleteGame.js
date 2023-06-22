@@ -11,6 +11,10 @@ const COMPLETE_GAME_SCHEMA = new mongoose.Schema({
     type: String,
     require: true,
   },
+  appUserID: {
+    type: String,
+    require: true,
+  },
   gameAppID: {
     type: String,
     require: true,
