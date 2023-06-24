@@ -6,68 +6,69 @@
  */
 const express = require('express')
 const router = express.Router()
-const axios = require('axios')
 
 const User = require('../models/User')
 const UserUtils = require('../util/util.user')
 
 require('dotenv').config()
 
-const STEAM_API = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/'
-
-const getSteamAPIHostURL = (userID) => {
-  let steamURL = `${STEAM_API}?key=${process.env.STEAM_API_KEY}`
-  steamURL += `&include_appinfo=true&steamid=${userID}`
-  steamURL += `&include_played_free_games=true&format=json`
-
-  return steamURL
-}
-
 router
-  .post('/', async (req, res) => {
-    try {
-      const response = await UserUtils.createUser({
-        id: req.body.id,
-        email: req.body.email,
-      })
-
-      if (response.success) {
-        res.status(201).json(response)
-      }
-    } catch (error) {
-      res.status(400).json({ success: false, message: error.message })
-    }
-  })
   .get('/:userID', async (req, res) => {
     try {
-      const user = await User.find({
+      // Get user by ID. Only expect one record to be found.
+      const user = await User.findOne({
         id: req.params.userID,
       })
+
+      // If no user was found. Throw error message.
+      if (!user) {
+        throw new Error(`User ID '${req.params.userID}' not found in database`)
+      }
 
       res.status(200).json(user)
     } catch (error) {
       res.status(400).json({ success: false, message: error.message })
     }
   })
-  .patch('/:userID', async (req, res) => {
+  .delete('/:userID', async (req, res) => {
     try {
-      const response = await UserUtils.insertUserSteamData(req.params.userID, {
-        name: req.body.name,
-        steam_id: req.body.steam_id,
+      const data = await User.deleteOne({
+        id: req.params.userID,
       })
 
-      if (response.success) {
-        res.status(201).json(response)
+      if (data.deletedCount === 0) {
+        throw new Error('Cannot delete user as no matching user was located')
+      }
+
+      res.status(200).json(data)
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message })
+    }
+  })
+  .post('/', async (req, res) => {
+    const { id, email } = req.body
+    try {
+      const isExistingUser = await UserUtils.doesUserExist(id)
+      if (isExistingUser) {
+        throw new Error(`Existing user found in database.`)
+      }
+
+      const data = await UserUtils.createUser({
+        id,
+        email,
+      })
+
+      if (data.success) {
+        res.status(201).json(data)
+      } else {
+        throw new Error(data.message)
       }
     } catch (error) {
       res.status(400).json({ success: false, message: error.message })
     }
   })
 
-  .get('/games/:userID', (req, res) => {
-    axios.get(getSteamAPIHostURL(req.params.userID)).then((response) => {
-      res.status(200).json(response.data)
-    })
-  })
+const gamesRouter = require('./games')
+router.use('/games', gamesRouter)
 
 module.exports = router

@@ -1,7 +1,7 @@
 /**
- * @file CompleteGame.js
+ * @file CompletedGame.js
  *
- * Determines the database schema for a complete game.
+ * Determines the database schema for a completed game.
  *
  */
 const mongoose = require('mongoose')
@@ -26,4 +26,4 @@ const COMPLETE_GAME_SCHEMA = new mongoose.Schema({
   },
 })
 
-module.exports = mongoose.model('CompleteGame', COMPLETE_GAME_SCHEMA)
+module.exports = mongoose.model('CompletedGame', COMPLETE_GAME_SCHEMA)

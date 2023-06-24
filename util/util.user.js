@@ -1,7 +1,7 @@
 /**
  * @file util.user.js
  *
- *
+ * Utility functions for the user collection/table.
  *
  */
 const User = require('../models/User')
