@@ -1,7 +1,7 @@
 /**
- * @file user.js
+ * @file games.js
  *
- * Handles all the API routes for the user's games.
+ * Handles all the API routes for the user's owned games.
  *
  */
 const express = require('express')
@@ -18,7 +18,7 @@ const STEAM_API = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/'
  * @param {string} userID
  * @returns Steam API URL containing the API key
  */
-const getSteamAPIHostURL = (userID) => {
+const userSteamGamesURL = (userID) => {
   let steamURL = `${STEAM_API}?key=${process.env.STEAM_API_KEY}`
   steamURL += `&include_appinfo=true&steamid=${userID}`
   steamURL += `&include_played_free_games=true&format=json`
@@ -30,11 +30,11 @@ router.get('/:userID', async (req, res) => {
   const { userID } = req.params
 
   try {
-    const { data } = await axios.get(getSteamAPIHostURL(userID))
+    const { data } = await axios.get(userSteamGamesURL(userID))
 
     res.status(200).json({
       success: true,
-      message: data,
+      message: data.response,
     })
   } catch (error) {
     res.status(400).json({

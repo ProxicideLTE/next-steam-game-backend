@@ -25,9 +25,6 @@ app.use('/auth', authRouter)
 const userRouter = require('../routes/user')
 app.use('/user', userRouter)
 
-const gameRouter = require('../routes/game')
-app.use('/game', gameRouter)
-
 const logoutRouter = require('../routes/logout')
 app.use('/logout', logoutRouter)
 

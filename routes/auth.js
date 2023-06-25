@@ -1,7 +1,7 @@
 /**
  * @file auth.js
  *
- * Manages all the user authenication to link the user's steam account
+ * Manages all the user authenication to link the user's Steam account
  * to their Google account.
  *
  */
