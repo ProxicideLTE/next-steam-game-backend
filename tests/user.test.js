@@ -18,7 +18,7 @@ describe('/user', () => {
 
     test('a non-existing user', async () => {
       const response = await request(app).get(`/user/${FAKE_USER.id}`)
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(202)
     })
   })
 

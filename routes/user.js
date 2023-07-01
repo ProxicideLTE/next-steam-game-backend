@@ -20,12 +20,18 @@ router
         id: req.params.userID,
       })
 
-      // If no user was found. Throw error message.
+      // If no user was found.
       if (!user) {
-        throw new Error(`User ID '${req.params.userID}' not found in database`)
+        res.status(202).json({
+          success: false,
+          message: `User ID '${req.params.userID}' not found in database`,
+        })
+      } else {
+        res.status(200).json({
+          success: true,
+          message: user,
+        })
       }
-
-      res.status(200).json(user)
     } catch (error) {
       res.status(400).json({ success: false, message: error.message })
     }
